@@ -9,16 +9,13 @@ public:
         ListNode* slow = head;
         ListNode* fast = head;
         
-        // Advance pointers directly and verify structural limits inside the condition
-        while (fast != nullptr && fast->next != nullptr) {
-            slow = slow->next;
+        while(fast != NULL && fast->next != NULL) {
             fast = fast->next->next;
-            
-            if (slow == fast) {
-                return true;
-            }
+            slow = slow->next;
+
+            if(slow == fast) return true;
         }
-        
+
         return false;
     }
 };
