@@ -10,42 +10,50 @@
  */
 class Solution {
 public:
-    ListNode* merge(ListNode* l1, ListNode* l2) {
-        ListNode dummy;
-        ListNode* tail = &dummy;
+    ListNode* merge(ListNode* a, ListNode* b) {
 
-        while(l1 && l2) {
-            if(l1->val < l2->val) {
-                tail->next = l1;
-                l1 = l1->next;
+        ListNode dummy;
+        ListNode* cur = &dummy;
+
+        while (a && b) {
+            if (a->val <= b->val) {
+                cur->next = a;
+                a = a->next;
+            } else {
+                cur->next = b;
+                b = b->next;
             }
-            else {
-                tail->next = l2;
-                l2 = l2->next;
-            }
-            tail = tail->next;
+            cur = cur->next;
         }
 
-        if(l1) tail->next = l1;
-        else tail->next = l2;
+        if (a)
+            cur->next = a;
+        else
+            cur->next = b;
+
+
 
         return dummy.next;
     }
 
     ListNode* sortList(ListNode* head) {
-        if(!head || !head->next) return head;
 
-        ListNode* slow = head, *fast = head, *prev = NULL;
+        if (!head || !head->next)
+            return head;
 
-        while(fast && fast->next) {
-            prev = slow;
+        ListNode* slow = head;
+        ListNode* fast = head->next;
+
+        while (fast && fast->next) {
             slow = slow->next;
             fast = fast->next->next;
         }
-        prev->next = NULL;
+
+        ListNode* right = slow->next;
+        slow->next = nullptr;
 
         ListNode* left = sortList(head);
-        ListNode* right = sortList(slow);
+        right = sortList(right);
 
         return merge(left, right);
     }
