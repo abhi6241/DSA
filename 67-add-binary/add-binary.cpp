@@ -18,7 +18,7 @@ public:
                 j--;
             }
 
-            ans += (sum % 2) + '0';
+            ans += (sum % 2) ? '1' : '0';
             // Equivalent:
             // ans.push_back((sum % 2) + '0');
             // push_back() appends a single character to the end of the string.
