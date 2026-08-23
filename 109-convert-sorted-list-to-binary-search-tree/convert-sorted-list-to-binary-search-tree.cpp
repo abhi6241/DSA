@@ -21,32 +21,30 @@
  */
 class Solution {
 public:
-    TreeNode* sortedListToBST(ListNode* head) {
-        if (!head)
+    TreeNode* build(ListNode*& head, int n) {
+        if (n <= 0)
             return nullptr;
 
-        if (!head->next)
-            return new TreeNode(head->val);
+        TreeNode* left = build(head, n / 2);
 
-        ListNode* slow = head;
-        ListNode* fast = head;
-        ListNode* prev = nullptr;
+        TreeNode* root = new TreeNode(head->val);
+        head = head->next;
 
-        // Find the middle node.
-        while (fast && fast->next) {
-            prev = slow;
-            slow = slow->next;
-            fast = fast->next->next;
-        }
-
-        // Disconnect left half from the middle.
-        prev->next = nullptr;
-
-        TreeNode* root = new TreeNode(slow->val);
-
-        root->left = sortedListToBST(head);
-        root->right = sortedListToBST(slow->next);
+        root->left = left;
+        root->right = build(head, n - n / 2 - 1);
 
         return root;
+    }
+
+    TreeNode* sortedListToBST(ListNode* head) {
+        int n = 0;
+        ListNode* temp = head;
+
+        while (temp) {
+            n++;
+            temp = temp->next;
+        }
+
+        return build(head, n);
     }
 };
