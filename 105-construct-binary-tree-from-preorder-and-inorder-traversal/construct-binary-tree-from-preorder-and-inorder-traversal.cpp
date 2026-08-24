@@ -10,30 +10,65 @@
  * };
  */
 class Solution {
-public:
-    unordered_map<int, int> inMap;
-    int preIndex = 0;
+private:
+    unordered_map<int, int> inorderIndex;
 
-    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder,
-                        int left, int right) {
-        if (left > right)
+    TreeNode* build(
+        vector<int>& preorder,
+        int preStart,
+        int preEnd,
+        int inStart,
+        int inEnd
+    ) {
+        // No elements left to build.
+        if (preStart > preEnd)
             return nullptr;
 
-        int rootVal = preorder[preIndex++];
-        TreeNode* root = new TreeNode(rootVal);
+        // First element of preorder is the root.
+        int rootValue = preorder[preStart];
 
-        int mid = inMap[rootVal];
+        // Find the root's position in inorder.
+        int mid = inorderIndex[rootValue];
 
-        root->left = buildTree(preorder, inorder, left, mid - 1);
-        root->right = buildTree(preorder, inorder, mid + 1, right);
+        // Number of nodes in the left subtree.
+        int leftSize = mid - inStart;
+
+        TreeNode* root = new TreeNode(rootValue);
+
+        // Build the left subtree.
+        root->left = build(
+            preorder,
+            preStart + 1,
+            preStart + leftSize,
+            inStart,
+            mid - 1
+        );
+
+        // Build the right subtree.
+        root->right = build(
+            preorder,
+            preStart + leftSize + 1,
+            preEnd,
+            mid + 1,
+            inEnd
+        );
 
         return root;
     }
 
+public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
-        for (int i = 0; i < inorder.size(); i++)
-            inMap[inorder[i]] = i;
 
-        return buildTree(preorder, inorder, 0, inorder.size() - 1);
+        // Store each value's index in inorder for O(1) lookup.
+        for (int i = 0; i < inorder.size(); i++)
+            inorderIndex[inorder[i]] = i;
+
+        return build(
+            preorder,
+            0,
+            preorder.size() - 1,
+            0,
+            inorder.size() - 1
+        );
     }
 };
