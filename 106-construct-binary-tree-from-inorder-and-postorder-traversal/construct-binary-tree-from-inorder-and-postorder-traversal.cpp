@@ -10,39 +10,76 @@
  * };
  */
 class Solution {
-private:
-    unordered_map<int, int> inorderIndex;
-
-    TreeNode* build(vector<int>& inorder, vector<int>postorder, int inStart, int inEnd, int postStart, int postEnd) {
-        if (inStart > inEnd)
-            return nullptr;
+public:
+    TreeNode* build(
+        vector<int>& inorder,
+        int inStart,
+        int inEnd,
+        vector<int>& postorder,
+        int pStart,
+        int pEnd,
+        map<int, int>& m
+    ) {
+        // No elements left to construct the subtree.
+        if (pStart > pEnd || inStart > inEnd)
+            return NULL;
 
         // Last element of postorder is the root.
-        int rootValue = postorder[postEnd];
-        int mid = inorderIndex[rootValue];
+        TreeNode* root = new TreeNode(postorder[pEnd]);
+
+        // Find the root's position in inorder.
+        int inRoot = m[root->val];
 
         // Number of nodes in the left subtree.
-        int leftSize = mid - inStart;
+        int numsLeft = inRoot - inStart;
 
-        TreeNode* root = new TreeNode(rootValue);
+        // Build the left subtree.
+        root->left = build(
+            inorder,
+            inStart,
+            inRoot - 1,
+            postorder,
+            pStart,
+            pStart + numsLeft - 1,
+            m
+        );
 
-        // Build left subtree.
-        root->left = build(inorder, postorder, inStart, mid - 1, postStart, postStart + leftSize - 1);
-
-        // Build right subtree.
-        root->right = build(inorder, postorder, mid + 1, inEnd, postStart + leftSize, postEnd - 1);
+        // Build the right subtree.
+        root->right = build(
+            inorder,
+            inRoot + 1,
+            inEnd,
+            postorder,
+            pStart + numsLeft,
+            pEnd - 1,
+            m
+        );
 
         return root;
     }
 
-public:
-    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+    TreeNode* buildTree(
+        vector<int>& inorder,
+        vector<int>& postorder
+    ) {
+        // Invalid input if sizes are different.
+        if (inorder.size() != postorder.size())
+            return NULL;
 
-        // Store each value's index in inorder for O(1) lookup.
+        map<int, int> m;
+
+        // Store each value's index in inorder.
         for (int i = 0; i < inorder.size(); i++)
-            inorderIndex[inorder[i]] = i;
+            m[inorder[i]] = i;
 
-        return build(inorder, postorder, 0, inorder.size() - 1, 0, postorder.size() - 1
+        return build(
+            inorder,
+            0,
+            inorder.size() - 1,
+            postorder,
+            0,
+            postorder.size() - 1,
+            m
         );
     }
 };
