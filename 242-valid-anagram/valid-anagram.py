@@ -1,6 +1,6 @@
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
-        d1, d2 = {}, {}
+        d1 = {}
         for i in s:
             if i not in d1:
                 d1[i] = 1
