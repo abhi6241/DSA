@@ -1,24 +1,23 @@
 
 class Solution:
-    def maxNiceDivisors(self, primeFactors: int) -> int:
+    def maxNiceDivisors(self, n):
+        M = 10**9 + 7
 
-        MOD = 10**9 + 7
+        # If n <= 3, return n directly
+        if n <= 3:
+            return n
 
-        # If primeFactors is 1, answer is 1
-        if primeFactors == 1:
-            return 1
+        # Case 1: n is divisible by 3
+        # Use only groups of 3 to maximize the product
+        if n % 3 == 0:
+            return pow(3, n // 3, M)
 
-        # Use as many 3s as possible
-        q, r = divmod(primeFactors, 3)
+        # Case 2: Remainder is 1
+        # Replace one group of 3 and the remaining 1
+        # with two groups of 2 (2 * 2 = 4)
+        if n % 3 == 1:
+            return (pow(3, (n - 4) // 3, M) * 4) % M
 
-        # If remainder is 0, use only 3s
-        if r == 0:
-            return pow(3, q, MOD)
-
-        # If remainder is 1, replace one 3 with 2 + 2
-        elif r == 1:
-            return (pow(3, q - 1, MOD) * 4) % MOD
-
-        # If remainder is 2, multiply by 2
-        else:
-            return (pow(3, q, MOD) * 2) % MOD
+        # Case 3: Remainder is 2
+        # Use groups of 3 and one group of 2
+        return (2 * pow(3, n // 3, M)) % M
