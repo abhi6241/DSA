@@ -15,14 +15,15 @@ public:
         ListNode* curr = &dummy;
         int carry = 0, sum;
 
+        // Add corresponding integers if they are not 0
         while(l1 || l2 || carry) {
             sum = carry;
             if(l1) {
-                sum += l1->val;
+                sum = sum + l1->val;
                 l1 = l1->next;
             }
             if(l2) {
-                sum += l2->val;
+                sum = sum + l2->val;
                 l2 = l2->next;
             }
 
