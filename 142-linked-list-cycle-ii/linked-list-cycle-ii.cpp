@@ -13,18 +13,20 @@ public:
 
         ListNode* slow = head;
         ListNode* fast = head;
+        bool isCycle = false;
 
         // Check whether a cycle exists
         while(fast != NULL && fast->next != NULL) {
             slow = slow->next;
             fast = fast->next->next;
 
-            if(slow == fast)
-                break;
+            if(slow == fast) {
+                isCycle = true; break;
+            }
         }
 
         // No cycle exists
-        if(fast == NULL || fast->next == NULL)
+        if(!isCycle)
             return NULL;
 
         // Find the starting node of the cycle
