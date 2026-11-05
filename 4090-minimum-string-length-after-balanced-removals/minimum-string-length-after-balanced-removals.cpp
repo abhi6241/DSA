@@ -9,8 +9,6 @@ public:
             else if(s[i] == 'b') bCount++;
         }
         
-        // if(aCount == 0 || bCount == 0) return size;
-
         return abs(aCount - bCount);
     }
 };
